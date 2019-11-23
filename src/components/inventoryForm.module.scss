@@ -1,0 +1,51 @@
+$color-green: #28b485;
+$color-white: #fff;
+$color-black: #000;
+$color-grey-dark: #777;
+
+
+.form {
+    padding: 2rem 1rem;
+    margin: 2.5rem;
+    font-family: inherit;
+    text-align: center;
+    margin-left: 30rem;
+    background-color: $color-white;
+    width: 70rem;
+    box-shadow: 0 .2rem .8rem rgba($color-black, 0.5);
+
+    & input[type="number"] {
+        margin-right: 2rem;
+        padding: 1rem;
+    }
+
+    & select {
+        margin-right: 2rem;
+        padding: 1rem;
+        font-family: inherit;
+
+    }
+
+}
+
+.submit {
+    padding: 1rem 3rem;
+    display: inline-block;
+    background-color: $color-green;
+    border: .1rem solid $color-green;
+    color: $color-white;
+    text-transform: uppercase;
+    font-family: inherit;
+}
+
+@media only screen and (max-width:84.6rem) {
+    .form {
+        margin-left: 15rem;
+        width: auto;
+        // display: block;
+    }
+
+    .submit {
+        margin-top: 2rem;
+    }
+}
