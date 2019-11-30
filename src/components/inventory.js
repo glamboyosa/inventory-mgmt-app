@@ -1,15 +1,20 @@
-import React, { useState, useCallback, useContext } from 'react';
+import React, { useState, useCallback, useContext, useEffect } from 'react';
 import classes from './inventory.module.scss';
 import InventoryList from './inventoryList';
 import InventoryForm from './inventoryForm';
 import Modal from './UI/modal';
 import { Redirect } from 'react-router-dom';
 import { AuthContext } from './context/auth-context';
+import useHttp from './hooks/http';
 const Inventory = () => {
   const authContext = useContext(AuthContext);
   const [data, setData] = useState([]);
   const [runOnce, setRunOnce] = useState(true);
   const [dismissModal, setDismissModal] = useState(false);
+  const { isLoading, fetchedData, error, fetchData } = useHttp();
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
   const submitHandler = useCallback(data => {
     setData(prevState => prevState.concat(data));
   }, []);
@@ -80,9 +85,10 @@ const Inventory = () => {
       />
     </div>
   );
-  if (!authContext.isAuth) {
+  if (authContext.isAuth) {
     content = <Redirect to="/auth" />;
   }
+  console.log(fetchedData);
   return content;
 };
 

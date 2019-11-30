@@ -10,7 +10,7 @@ const Login = () => {
     e.preventDefault();
     console.log(Username);
     console.log(Password);
-    authContext.login();
+    authContext.login(Username, Password);
     console.log(authContext.isAuth);
   };
   return (

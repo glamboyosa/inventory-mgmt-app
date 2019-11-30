@@ -4,7 +4,9 @@ import './index.scss';
 import App from './App';
 import AuthContextProvider from './components/context/auth-context';
 import { BrowserRouter as Router } from 'react-router-dom';
+import axios from 'axios';
 import * as serviceWorker from './serviceWorker';
+axios.defaults.baseURL = 'https://inventory-mgmt-4b42b.firebaseio.com';
 ReactDOM.render(
   <Router>
     <AuthContextProvider>
