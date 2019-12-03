@@ -19,18 +19,18 @@ const useHttp = () => {
     data: null,
     error: null
   });
-  const fetchData = useCallback(() => {
+  const fetchData = useCallback(token => {
     const action = {
       type: actionTypes.START
     };
     dispatch(action);
     axios
-      .get('/items.json')
+      .get('/items.json?auth=' + token)
       .then(resp => {
         const action = {
           type: actionTypes.AUTH_SUCCESS,
           data: Object.keys(resp.data).map(el => {
-            return { ...resp.data[el] };
+            return { ...resp.data[el], id: el };
           })
         };
         dispatch(action);

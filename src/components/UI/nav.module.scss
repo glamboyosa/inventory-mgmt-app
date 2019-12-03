@@ -1,0 +1,26 @@
+$color-black: #000;
+
+.nav {
+  padding: 1rem;
+  & ul {
+    list-style: none;
+    float: right;
+  }
+}
+
+.mainNav {
+  & li {
+    font-size: 2rem;
+
+    &:after {
+      content: ' ';
+      background-color: $color-black;
+      height: 2px;
+      display: block;
+    }
+  }
+}
+.link {
+  color: $color-black;
+  text-decoration: none;
+}

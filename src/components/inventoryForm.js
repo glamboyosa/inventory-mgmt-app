@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import classes from './inventoryForm.module.scss';
+import Modal from './UI/modal';
 // import classes from './inventoryForm.module.scss';
 const InventoryForm = React.memo(props => {
   const [option, setOption] = useState('');
   const [amount, setAmount] = useState(0);
+  const [dismissModal, setDismissModal] = useState(false);
   const submitHandler = e => {
     e.preventDefault();
     const id = Math.floor(Math.random() * 10000);
@@ -14,16 +16,22 @@ const InventoryForm = React.memo(props => {
       id
     });
   };
-
-  return (
+  const closeModal = () => setDismissModal(true);
+  let content = (
     <div className={classes.section}>
       <form className={classes.form} onSubmit={submitHandler}>
-        <select onChange={e => setOption(e.target.value)}>
-          <option value="">Inventory List</option>
-          <option value="client-counsellor form">Client-Counsellor Form</option>
-          <option value="letterhead">Letterhead</option>
-          <option value="A4">A4 Paper</option>
-        </select>
+        {!props.isLoading && props.dropdown !== null ? (
+          <select onChange={e => setOption(e.target.value)}>
+            <option selected>Pick inventory item</option>
+            {props.dropdown.map(el => (
+              <option key={el.id} value={el.items}>
+                {el.items}
+              </option>
+            ))}
+          </select>
+        ) : (
+          <p>Loading...</p>
+        )}
         <input
           type="number"
           placeholder="Amount"
@@ -35,6 +43,14 @@ const InventoryForm = React.memo(props => {
       </form>
     </div>
   );
+  if (props.error) {
+    content = (
+      <Modal close={closeModal} dismiss={dismissModal}>
+        Trouble loading data. Please refresh the page.
+      </Modal>
+    );
+  }
+  return content;
 });
 
 export default InventoryForm;

@@ -3,6 +3,7 @@ import classes from './inventory.module.scss';
 import InventoryList from './inventoryList';
 import InventoryForm from './inventoryForm';
 import Modal from './UI/modal';
+import Nav from './UI/nav';
 import { Redirect } from 'react-router-dom';
 import { AuthContext } from './context/auth-context';
 import useHttp from './hooks/http';
@@ -13,10 +14,22 @@ const Inventory = () => {
   const [dismissModal, setDismissModal] = useState(false);
   const { isLoading, fetchedData, error, fetchData } = useHttp();
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
-  const submitHandler = useCallback(data => {
-    setData(prevState => prevState.concat(data));
+    if (authContext.token !== null) {
+      fetchData(authContext.token);
+    }
+    if (localStorage.getItem('data')) {
+      console.log(localStorage.getItem('data'));
+      setData(JSON.parse(localStorage.getItem('data')));
+    }
+    return () => null;
+  }, [fetchData, authContext]);
+  useEffect(() => {
+    if (data.length >= 1) {
+      localStorage.setItem('data', JSON.stringify(data));
+    }
+  }, [data]);
+  const submitHandler = useCallback(formData => {
+    setData(prevState => prevState.concat(formData));
   }, []);
   const IncrementInventoryHandler = useCallback(
     id => {
@@ -34,6 +47,7 @@ const Inventory = () => {
       const newData = [].concat(...data);
       newData[index].amount = newData[index].amount - 1;
       setData(newData);
+      // localStorage.setItem('data', JSON.stringify(data));
     },
     [data]
   );
@@ -43,8 +57,8 @@ const Inventory = () => {
       const index = newData.findIndex(el => el.id === id);
       console.log(index);
       newData.splice(index, 1);
-
       setData(newData);
+      // localStorage.setItem('data', JSON.stringify(data));
     },
     [data]
   );
@@ -77,7 +91,13 @@ const Inventory = () => {
           )
         );
       })}
-      <InventoryForm submitHandler={submitHandler} />
+      <Nav />
+      <InventoryForm
+        submitHandler={submitHandler}
+        dropdown={fetchedData}
+        isLoading={isLoading}
+        error={error}
+      />
       <InventoryList
         inventory={data}
         deleteHandler={deleteInventoryHandler}
@@ -85,7 +105,7 @@ const Inventory = () => {
       />
     </div>
   );
-  if (authContext.isAuth) {
+  if (!authContext.isAuth) {
     content = <Redirect to="/auth" />;
   }
   console.log(fetchedData);
