@@ -22,13 +22,18 @@ const Inventory = () => {
     }
     return () => null;
   }, [fetchData, authContext]);
-  const submitHandler = useCallback(
-    formData => {
-      setData(prevState => prevState.concat(formData));
-      localStorage.setItem('data', JSON.stringify(data));
-    },
-    [data]
-  );
+  const submitHandler = useCallback(formData => {
+    setData(prevState => prevState.concat(formData));
+    const array = [];
+    array.push(formData);
+    const oldData = JSON.parse(localStorage.getItem('data'));
+    if (oldData) {
+      oldData.push(formData);
+      localStorage.setItem('data', JSON.stringify(oldData));
+    } else {
+      localStorage.setItem('data', JSON.stringify(array));
+    }
+  }, []);
 
   const decrementInventoryHandler = useCallback(
     id => {
@@ -46,7 +51,7 @@ const Inventory = () => {
       const index = newData.findIndex(el => el.id === id);
       newData.splice(index, 1);
       setData(newData);
-      localStorage.setItem('data', JSON.stringify(data));
+      localStorage.setItem('data', JSON.stringify(newData));
     },
     [data]
   );
