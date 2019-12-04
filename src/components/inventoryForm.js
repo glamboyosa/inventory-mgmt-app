@@ -9,7 +9,6 @@ const InventoryForm = React.memo(props => {
   const submitHandler = e => {
     e.preventDefault();
     const id = Math.floor(Math.random() * 10000);
-    console.log({ name: option, amount, id });
     props.submitHandler({
       name: option,
       amount: parseInt(amount),

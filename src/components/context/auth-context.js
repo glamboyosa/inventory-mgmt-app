@@ -18,7 +18,6 @@ const AuthContextProvider = props => {
   const [isLoading, setLoading] = useState(false);
   const [token, setToken] = useState(null);
   const [localId, setLocalId] = useState(null);
-  console.log(props);
   const logOut = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('localId');
@@ -43,7 +42,6 @@ const AuthContextProvider = props => {
         data
       )
       .then(resp => {
-        console.log(resp.data);
         setLoading(false);
         setToken(resp.data.idToken);
         setLocalId(resp.data.localId);

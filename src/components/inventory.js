@@ -18,25 +18,14 @@ const Inventory = () => {
       fetchData(authContext.token);
     }
     if (localStorage.getItem('data')) {
-      console.log(localStorage.getItem('data'));
       setData(JSON.parse(localStorage.getItem('data')));
     }
     return () => null;
   }, [fetchData, authContext]);
-  useEffect(() => {
-    if (data.length >= 1) {
+  const submitHandler = useCallback(
+    formData => {
+      setData(prevState => prevState.concat(formData));
       localStorage.setItem('data', JSON.stringify(data));
-    }
-  }, [data]);
-  const submitHandler = useCallback(formData => {
-    setData(prevState => prevState.concat(formData));
-  }, []);
-  const IncrementInventoryHandler = useCallback(
-    id => {
-      const index = data.findIndex(el => el.id === id);
-      const newData = [].concat(...data);
-      newData[index].amount = newData[index].amount + 1;
-      setData(newData);
     },
     [data]
   );
@@ -47,7 +36,7 @@ const Inventory = () => {
       const newData = [].concat(...data);
       newData[index].amount = newData[index].amount - 1;
       setData(newData);
-      // localStorage.setItem('data', JSON.stringify(data));
+      localStorage.setItem('data', JSON.stringify(data));
     },
     [data]
   );
@@ -55,10 +44,9 @@ const Inventory = () => {
     id => {
       let newData = [...data];
       const index = newData.findIndex(el => el.id === id);
-      console.log(index);
       newData.splice(index, 1);
       setData(newData);
-      // localStorage.setItem('data', JSON.stringify(data));
+      localStorage.setItem('data', JSON.stringify(data));
     },
     [data]
   );
@@ -70,14 +58,11 @@ const Inventory = () => {
         let quarterTheAmt;
         if (runOnce) {
           amt = el.amount;
-          console.log(amt);
           quarterTheAmt = amt * 0.25;
-          console.log(quarterTheAmt);
           localStorage.setItem('quarterTheAmount', quarterTheAmt);
           setRunOnce(false);
         }
         quarterTheAmt = localStorage.getItem('quarterTheAmount');
-        console.log(el.amount < quarterTheAmt);
         return (
           el.amount < quarterTheAmt && (
             <Modal
