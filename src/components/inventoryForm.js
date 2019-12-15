@@ -18,7 +18,14 @@ const InventoryForm = React.memo(props => {
   const closeModal = () => setDismissModal(true);
   let content = (
     <div className={classes.section}>
-      <form className={classes.form} onSubmit={submitHandler}>
+      <form
+        className={
+          !props.restockstate
+            ? classes.form
+            : [classes.form, classes.Form].join(' ')
+        }
+        onSubmit={submitHandler}
+      >
         {!props.isLoading && props.dropdown !== null ? (
           <select onChange={e => setOption(e.target.value)}>
             <option selected>Pick inventory item</option>

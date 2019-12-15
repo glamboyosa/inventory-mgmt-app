@@ -12,6 +12,8 @@ const Inventory = () => {
   const [data, setData] = useState([]);
   const [runOnce, setRunOnce] = useState(true);
   const [dismissModal, setDismissModal] = useState(false);
+  const [restockState, setRestockState] = useState(false);
+  const [btnState, setBtnState] = useState(true);
   const { isLoading, fetchedData, error, fetchData } = useHttp();
   useEffect(() => {
     if (authContext.token !== null) {
@@ -24,6 +26,7 @@ const Inventory = () => {
   }, [fetchData, authContext]);
   const submitHandler = useCallback(formData => {
     setData(prevState => prevState.concat(formData));
+    console.log(formData);
     const array = [];
     array.push(formData);
     const oldData = JSON.parse(localStorage.getItem('data'));
@@ -56,6 +59,25 @@ const Inventory = () => {
     [data]
   );
   const closeModal = () => setDismissModal(true);
+  const restock = useCallback(() => {
+    setRestockState(true);
+    setBtnState(false);
+  }, []);
+  const restockHandler = useCallback(
+    formData => {
+      const { name, amount } = formData;
+      const newData = [...data];
+      const index = newData.findIndex(el => el.name === name);
+      console.log(amount);
+      console.log(index);
+      newData[index].amount = amount + newData[index].amount;
+      setData(newData);
+      localStorage.setItem('data', JSON.stringify(data));
+      setRestockState(false);
+      setBtnState(true);
+    },
+    [data]
+  );
   let content = (
     <div className={classes.main}>
       {data.map(el => {
@@ -74,6 +96,9 @@ const Inventory = () => {
               className={classes.main__modal}
               close={closeModal}
               dismiss={dismissModal}
+              btnInfo="Restock"
+              restockstate={restock}
+              btnstate={btnState}
             >
               {el.name} only has {el.amount} left.
               <br /> Consider re-stocking soon.
@@ -83,6 +108,7 @@ const Inventory = () => {
       })}
       <Nav />
       <InventoryForm
+        restockstate={false}
         submitHandler={submitHandler}
         dropdown={fetchedData}
         isLoading={isLoading}
@@ -98,7 +124,24 @@ const Inventory = () => {
   if (!authContext.isAuth) {
     content = <Redirect to="/auth" />;
   }
-  console.log(fetchedData);
+
+  if (restockState) {
+    return (
+      <Modal
+        className={classes.main__modal}
+        close={closeModal}
+        dismiss={dismissModal}
+      >
+        <InventoryForm
+          restockstate={true}
+          submitHandler={restockHandler}
+          dropdown={fetchedData}
+          isLoading={isLoading}
+          error={error}
+        />
+      </Modal>
+    );
+  }
   return content;
 };
 

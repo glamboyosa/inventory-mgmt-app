@@ -9,6 +9,11 @@ const Modal = props =>
         <span onClick={props.close}>
           <IoIosClose className={classes.modal__icon} />
         </span>
+        {props.btnstate && (
+          <button onClick={props.restockstate} className={classes.modal__btn}>
+            {props.btnInfo}
+          </button>
+        )}
       </div>
     </div>
   );

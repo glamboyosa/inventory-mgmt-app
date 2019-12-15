@@ -1,6 +1,8 @@
 $color-black: #000;
 $color-white: #fff;
 $color-grey: #333;
+$color-green: #28b485;
+$color-grey-dark: #777;
 
 .backdrop {
     margin-top: -2.5rem;
@@ -30,5 +32,15 @@ $color-grey: #333;
 
     &__icon {
         font-size: 3.5rem;
+    }
+
+    &__btn {
+        padding: 1rem 3rem;
+        flex-direction: column;
+        background-color: $color-green;
+        border: .1rem solid $color-green;
+        color: $color-white;
+        text-transform: uppercase;
+        font-family: inherit;
     }
 }
